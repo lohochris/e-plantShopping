@@ -7,14 +7,14 @@ const CartItem = ({ onContinueShopping }) => {
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
-  //  Calculate total amount for all products in the cart
+  // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
     return cart
       .reduce((total, item) => total + parseFloat(calculateTotalCost(item)), 0)
       .toFixed(2);
   };
 
-  //  Handle continue shopping
+  // Handle continue shopping
   const handleContinueShopping = (e) => {
     if (onContinueShopping) {
       onContinueShopping(e);
@@ -23,7 +23,7 @@ const CartItem = ({ onContinueShopping }) => {
     }
   };
 
-  //  Increment quantity
+  // Increment quantity
   const handleIncrement = (item) => {
     dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
   };
@@ -37,7 +37,7 @@ const CartItem = ({ onContinueShopping }) => {
     }
   };
 
-  //  Remove item from cart
+  // Remove item from cart
   const handleRemove = (item) => {
     dispatch(removeItem(item.name));
   };
@@ -48,6 +48,19 @@ const CartItem = ({ onContinueShopping }) => {
     return (unitPrice * item.quantity).toFixed(2);
   };
 
+  // --- Fallback UI if cart is empty ---
+  if (cart.length === 0) {
+    return (
+      <div className="cart-container empty-cart">
+        <h2 style={{ color: 'black' }}>Your cart is currently empty.</h2>
+        <button className="get-started-button" onClick={handleContinueShopping}>
+          Continue Shopping
+        </button>
+      </div>
+    );
+  }
+
+  // --- Main Cart UI ---
   return (
     <div className="cart-container">
       <h2 style={{ color: 'black' }}>Total Cart Amount: ${calculateTotalAmount()}</h2>

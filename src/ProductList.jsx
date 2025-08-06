@@ -16,6 +16,7 @@ function ProductList({ onHomeClick }) {
   );
 
   // Add to Cart
+  
   const handleAddToCart = (product) => {
     dispatch(addItem(product));
     setAddedToCart((prev) => ({
@@ -25,7 +26,73 @@ function ProductList({ onHomeClick }) {
   };
 
   const plantsArray = [/* your full plant categories here */];
-
+    [{
+      category: 'Indoor Plants',
+      plants: [
+        {
+          name: 'Spider Plant',
+          image: 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Chlorophytum_comosum0.jpg',
+          description: 'Air-purifying and easy to grow.',
+          cost: '12',
+        },
+        {
+          name: 'Peace Lily',
+          image: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/Spathiphyllum_cochlearispathum_RTBG.jpg',
+          description: 'Elegant white flowers and cleans the air.',
+          cost: '18',
+        },
+        {
+          name: 'Snake Plant',
+          image: 'https://upload.wikimedia.org/wikipedia/commons/4/43/Sansevieria_trifasciata_1.jpg',
+          description: 'Thrives on neglect and low light.',
+          cost: '15',
+        },
+        {
+          name: 'Aloe Vera',
+          image: 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Aloe_vera_3.jpg',
+          description: 'Medicinal plant for skin and cuts.',
+          cost: '10',
+        },
+        {
+          name: 'Boston Fern',
+          image: 'https://upload.wikimedia.org/wikipedia/commons/7/72/Boston_fern_%28Nephrolepis_exaltata%29_2.jpg',
+          description: 'Lush and ideal for hanging baskets.',
+          cost: '14',
+        },
+        {
+          name: 'ZZ Plant',
+          image: 'https://upload.wikimedia.org/wikipedia/commons/6/68/Zamioculcas_zamiifolia_leaf.jpg',
+          description: 'Glossy leaves and low maintenance.',
+          cost: '20',
+        },
+        {
+          name: 'Rubber Plant',
+          image: 'https://upload.wikimedia.org/wikipedia/commons/2/23/Ficus_elastica_leaf.jpg',
+          description: 'Bold leaves and air purifying.',
+          cost: '22',
+        },
+        {
+          name: 'Pothos',
+          image: 'https://upload.wikimedia.org/wikipedia/commons/4/43/Epipremnum_aureum.jpg',
+          description: 'Fast-growing vine, great for shelves.',
+          cost: '11',
+        },
+        {
+          name: 'Areca Palm',
+          image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Dypsis_lutescens_1.jpg',
+          description: 'Tropical vibes and air purification.',
+          cost: '25',
+        },
+        {
+          name: 'Jade Plant',
+          image: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Crassula_ovata4.jpg',
+          description: 'Succulent said to bring prosperity.',
+          cost: '13',
+        },
+      ],
+    },
+  ];
+  
   const handleHomeClick = (e) => {
     e.preventDefault();
     onHomeClick();
