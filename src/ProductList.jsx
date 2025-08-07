@@ -5,7 +5,7 @@ import './ProductList.css';
 import CartItem from './CartItem';
 
 function ProductList({ onHomeClick }) {
-  const [showCart, setShowCart] = useState(false);
+  const [view, setView] = useState('plants'); // NEW: 'plants' or 'cart'
   const [addedToCart, setAddedToCart] = useState({});
   const dispatch = useDispatch();
 
@@ -13,7 +13,6 @@ function ProductList({ onHomeClick }) {
   const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const handleAddToCart = (product) => {
-    // Convert cost to proper $ format if needed
     const formattedProduct = {
       ...product,
       cost: product.cost.startsWith('$') ? product.cost : `$${parseFloat(product.cost).toFixed(2)}`
@@ -66,11 +65,16 @@ function ProductList({ onHomeClick }) {
           description: 'Glossy leaves and low maintenance.',
           cost: '20',
         },
+      ],
+    },
+    {
+      category: 'Succulents',
+      plants: [
         {
-          name: 'Rubber Plant',
-          image: 'https://upload.wikimedia.org/wikipedia/commons/2/23/Ficus_elastica_leaf.jpg',
-          description: 'Bold leaves and air purifying.',
-          cost: '22',
+          name: 'Jade Plant',
+          image: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Crassula_ovata4.jpg',
+          description: 'Succulent said to bring prosperity.',
+          cost: '13',
         },
         {
           name: 'Pothos',
@@ -78,6 +82,11 @@ function ProductList({ onHomeClick }) {
           description: 'Fast-growing vine, great for shelves.',
           cost: '11',
         },
+      ],
+    },
+    {
+      category: 'Tropical',
+      plants: [
         {
           name: 'Areca Palm',
           image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Dypsis_lutescens_1.jpg',
@@ -85,24 +94,14 @@ function ProductList({ onHomeClick }) {
           cost: '25',
         },
         {
-          name: 'Jade Plant',
-          image: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Crassula_ovata4.jpg',
-          description: 'Succulent said to bring prosperity.',
-          cost: '13',
+          name: 'Rubber Plant',
+          image: 'https://upload.wikimedia.org/wikipedia/commons/2/23/Ficus_elastica_leaf.jpg',
+          description: 'Bold leaves and air purifying.',
+          cost: '22',
         },
       ],
     },
   ];
-
-  const handleCartClick = (e) => {
-    e.preventDefault();
-    setShowCart(true);
-  };
-
-  const handleContinueShopping = (e) => {
-    e.preventDefault();
-    setShowCart(false);
-  };
 
   const styleObj = {
     backgroundColor: '#4CAF50',
@@ -163,12 +162,12 @@ function ProductList({ onHomeClick }) {
 
         <div style={styleObjUl}>
           <div>
-            <a href="#" onClick={(e) => { e.preventDefault(); setShowCart(false); }} style={styleA}>
+            <a href="#" onClick={(e) => { e.preventDefault(); setView('plants'); }} style={styleA}>
               Plants
             </a>
           </div>
           <div>
-            <a href="#" onClick={handleCartClick} style={styleA}>
+            <a href="#" onClick={(e) => { e.preventDefault(); setView('cart'); }} style={styleA}>
               <div style={{ position: 'relative' }}>
                 <h1 className="cart">
                   <svg
@@ -199,11 +198,11 @@ function ProductList({ onHomeClick }) {
       </div>
 
       {/* PRODUCT LIST OR CART */}
-      {!showCart ? (
+      {view === 'plants' ? (
         <div className="product-grid">
           {plantsArray.map((category, index) => (
             <div key={index}>
-              <h1><div>{category.category}</div></h1>
+              <h1>{category.category}</h1>
               <div className="product-list">
                 {category.plants.map((plant, i) => {
                   const formattedCost = plant.cost.startsWith('$') ? plant.cost : `$${parseFloat(plant.cost).toFixed(2)}`;
@@ -228,7 +227,7 @@ function ProductList({ onHomeClick }) {
           ))}
         </div>
       ) : (
-        <CartItem onContinueShopping={handleContinueShopping} />
+        <CartItem onContinueShopping={() => setView('plants')} />
       )}
     </div>
   );
