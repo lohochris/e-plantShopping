@@ -1,32 +1,33 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem } from './CartSlice'; // Ensure this path is correct
+import { addItem } from './CartSlice';
 import './ProductList.css';
 import CartItem from './CartItem';
 
 function ProductList({ onHomeClick }) {
   const [showCart, setShowCart] = useState(false);
-  const [showPlants, setShowPlants] = useState(false);
   const [addedToCart, setAddedToCart] = useState({});
   const dispatch = useDispatch();
 
-  // ✅ Total quantity of items in the cart
-  const totalQuantity = useSelector(state =>
-    state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
-  );
+  const cartItems = useSelector((state) => state.cart.items);
+  const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Add to Cart
-  
   const handleAddToCart = (product) => {
-    dispatch(addItem(product));
+    // Convert cost to proper $ format if needed
+    const formattedProduct = {
+      ...product,
+      cost: product.cost.startsWith('$') ? product.cost : `$${parseFloat(product.cost).toFixed(2)}`
+    };
+
+    dispatch(addItem(formattedProduct));
     setAddedToCart((prev) => ({
       ...prev,
       [product.name]: true,
     }));
   };
 
-  const plantsArray = [/* your full plant categories here */];
-    [{
+  const plantsArray = [
+    {
       category: 'Indoor Plants',
       plants: [
         {
@@ -92,21 +93,10 @@ function ProductList({ onHomeClick }) {
       ],
     },
   ];
-  
-  const handleHomeClick = (e) => {
-    e.preventDefault();
-    onHomeClick();
-  };
 
   const handleCartClick = (e) => {
     e.preventDefault();
     setShowCart(true);
-  };
-
-  const handlePlantsClick = (e) => {
-    e.preventDefault();
-    setShowPlants(true);
-    setShowCart(false);
   };
 
   const handleContinueShopping = (e) => {
@@ -116,19 +106,21 @@ function ProductList({ onHomeClick }) {
 
   const styleObj = {
     backgroundColor: '#4CAF50',
-    color: '#fff!important',
+    color: '#fff',
     padding: '15px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     fontSize: '20px',
   };
+
   const styleObjUl = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '1100px',
   };
+
   const styleA = {
     color: 'white',
     fontSize: '30px',
@@ -160,7 +152,7 @@ function ProductList({ onHomeClick }) {
               src="https://cdn.pixabay.com/photo/2020/08/05/13/12/eco-5465432_1280.png"
               alt=""
             />
-            <a href="/" onClick={(e) => handleHomeClick(e)}>
+            <a href="/" onClick={(e) => { e.preventDefault(); onHomeClick(); }}>
               <div>
                 <h3 style={{ color: 'white' }}>Paradise Nursery</h3>
                 <i style={{ color: 'white' }}>Where Green Meets Serenity</i>
@@ -171,12 +163,12 @@ function ProductList({ onHomeClick }) {
 
         <div style={styleObjUl}>
           <div>
-            <a href="#" onClick={(e) => handlePlantsClick(e)} style={styleA}>
+            <a href="#" onClick={(e) => { e.preventDefault(); setShowCart(false); }} style={styleA}>
               Plants
             </a>
           </div>
           <div>
-            <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
+            <a href="#" onClick={handleCartClick} style={styleA}>
               <div style={{ position: 'relative' }}>
                 <h1 className="cart">
                   <svg
@@ -206,34 +198,31 @@ function ProductList({ onHomeClick }) {
         </div>
       </div>
 
-      {/* PRODUCT GRID */}
+      {/* PRODUCT LIST OR CART */}
       {!showCart ? (
         <div className="product-grid">
           {plantsArray.map((category, index) => (
             <div key={index}>
-              <h1>
-                <div>{category.category}</div>
-              </h1>
+              <h1><div>{category.category}</div></h1>
               <div className="product-list">
-                {category.plants.map((plant, plantIndex) => (
-                  <div className="product-card" key={plantIndex}>
-                    <img
-                      className="product-image"
-                      src={plant.image}
-                      alt={plant.name}
-                    />
-                    <div className="product-title">{plant.name}</div>
-                    <div className="product-description">{plant.description}</div>
-                    <div className="product-cost">{plant.cost}</div>
-                    <button
-                      className="product-button"
-                      onClick={() => handleAddToCart(plant)}
-                      disabled={!!addedToCart[plant.name]}
-                    >
-                      {addedToCart[plant.name] ? 'Added' : 'Add to Cart'}
-                    </button>
-                  </div>
-                ))}
+                {category.plants.map((plant, i) => {
+                  const formattedCost = plant.cost.startsWith('$') ? plant.cost : `$${parseFloat(plant.cost).toFixed(2)}`;
+                  return (
+                    <div className="product-card" key={i}>
+                      <img className="product-image" src={plant.image} alt={plant.name} />
+                      <div className="product-title">{plant.name}</div>
+                      <div className="product-description">{plant.description}</div>
+                      <div className="product-cost">{formattedCost}</div>
+                      <button
+                        className="product-button"
+                        onClick={() => handleAddToCart(plant)}
+                        disabled={!!addedToCart[plant.name]}
+                      >
+                        {addedToCart[plant.name] ? 'Added' : 'Add to Cart'}
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
